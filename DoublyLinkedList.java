@@ -8,8 +8,8 @@ public class DoublyLinkedList {
         private Node next;
         private Node previous;
 
-        public Node (int data){
-            this.data=data;
+       public Node(int data){
+           this.data=data;
         }
     }
     public DoublyLinkedList(){
@@ -17,55 +17,68 @@ public class DoublyLinkedList {
         this.tail=null;
         this.length=0;
     }
+
     public boolean isEmpty(){
-        return length==0;
+        return length==0;  //or head==null
     }
+
     public int length(){
         return length;
     }
-    public void displayForward(){
-        Node current=head;
-        while(current!=null){
-            System.out.print(current.data+" -> ");
-            current=current.next;
-        }
-        System.out.println("null");
-    }
-    public void displayBackward(){
-        Node current = tail;
-        while(current!=null){
-            System.out.print(current.data+"  -> ");
-            current=current.previous;
-        }
-        System.out.println("null");
-    }
-    public void insertAtBeginning(int data){
-        Node newNode = new Node(data);
+
+    public void printForward(){
+        Node temp = head;
         if(head==null){
-            tail=newNode;
-        }else{
-            head.previous=newNode;
+            return;
         }
-        newNode.next=head;
-        head=newNode;
-        length++;
+        while(temp!=null){
+            System.out.print(temp.data+" -> ");
+            temp=temp.next;
+        }
+        System.out.println("null");
     }
+
+    public void printBackward(){
+        Node temp=tail;
+        if(tail==null){
+            return;
+        }
+        while(temp!=null){
+            System.out.print(temp.data+" -> ");
+            temp=temp.previous;
+        }
+        System.out.println("null");
+    }
+
+    public void insertAtBeginning(int data){
+          Node newNode = new Node(data);
+          if(isEmpty()){
+              tail=newNode;
+          }else{
+               head.previous=newNode;
+          }
+          newNode.next=head;
+          head=newNode;
+          length++;
+    }
+
     public void insertAtEnd(int data){
         Node newNode = new Node(data);
-        if(tail==null){
+        if(isEmpty()){
             head=newNode;
         }else{
             tail.next=newNode;
             newNode.previous=tail;
+
         }
         tail=newNode;
         length++;
     }
-    public Node deleteFirst(){
-        if(head==null){
+    public Node deleteAtBeginning(){
+        if(isEmpty()){
             throw new NoSuchElementException();
         }
-        Node temp = head;
+        Node  temp=head;
         if(head==tail){
             tail=null;
         }else{
@@ -76,41 +89,76 @@ public class DoublyLinkedList {
         length--;
         return temp;
     }
-    public Node deleteLast(){
-        if(head==null){
+    public Node deleteAtEnd(){
+        if(isEmpty()){
             throw new NoSuchElementException();
         }
-        Node temp= tail;
-        if (head==tail){
+        Node temp=tail;
+        if(head==tail){
             head=null;
-        }else{
-            tail.previous.next=null;
-            tail=tail.previous;
         }
+        else{
+            tail.previous.next=null;
+        }
+        tail=tail.previous;
         temp.previous=null;
         length--;
         return temp;
     }
+    public void insertBefore(Node next_node, int data) {
+        if (next_node == null) {
+            System.out.println("The specified node cannot be null.");
+            return;
+        }
+
+
+        Node newNode = new Node(data);
+
+        newNode.next = next_node;
+        newNode.previous = next_node.previous;
+
+        if (next_node.previous != null) {
+            next_node.previous.next = newNode;
+        } else {
+            head = newNode;
+        }
+
+        next_node.previous = newNode;
+
+        length++;
+    }
 
     public static void main(String[] args) {
-       DoublyLinkedList dll = new DoublyLinkedList();
-       dll.insertAtBeginning(12);
-       dll.insertAtBeginning(23);
-       dll.insertAtEnd(45);
-       dll.insertAtEnd(35);
-       //23->12->45->35->null
-        dll.displayForward();
-       //35->45->12->23->null
-        dll.displayBackward();
+        DoublyLinkedList dll = new DoublyLinkedList();
+        dll.insertAtBeginning(12);
+        dll.insertAtBeginning(11);
+        dll.insertAtBeginning(13);
+        dll.insertAtBeginning(11);
+        dll.insertAtEnd(55);
+        dll.insertAtEnd(223);
+        dll.insertAtEnd(67);
+/*
+        dll.printBackward();
         System.out.println(dll.length());
-        dll.deleteFirst();
-        //12->45->35->null
-        dll.displayForward();
-        dll.deleteLast();
-        //12->35->null
-        dll.displayForward();
+        dll.printForward();
+        dll.deleteAtBeginning();
+        dll.deleteAtEnd();
+*/
+        System.out.println("Original List: ");
+        dll.printForward();
+        System.out.println("\nInserting 50 before 55...");
+        Node current = dll.head;
+        while (current != null && current.data != 55) {
+            current = current.next;
+        }
+
+        dll.insertBefore(current, 50);
+
+        System.out.println("List after inserting 50 before 55:");
+        dll.printForward();
 
 
     }
 
 }
+
